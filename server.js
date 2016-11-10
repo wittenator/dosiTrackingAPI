@@ -40,12 +40,20 @@ app.post("/presence", function(req, res) {
   if (!(req.body.firstName || req.body.lastName)) {
     handleError(res, "Invalid user input", "Must provide a first or last name.", 400);
   }
-
-  db.collection(PRESENCE_COLLECTION).insertOne(newPresenceEntry, function(err, doc) {
+  if(db.collection.find({_id: “myId”}, {_id: 1}).limit(1)) != NULL)
+  {
+    db.collection(PRESENCE_COLLECTION).update({id:newPresenceEntry.personID}, {$push:{presence:{date: new Date().format("d-m-Y"), time: new Date().format("h:i:s")}}});
+  } 
+  else
+  {
+    db.collection(PRESENCE_COLLECTION).insertOne(newPresenceEntry, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to create new contact.");
     } else {
       res.status(201).json(doc.ops[0]);
     }
   });
+  }
+
+  
 });
