@@ -4,7 +4,7 @@ var bodyParser = require("body-parser");
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 
-var CONTACTS_COLLECTION = "contacts";
+var PRESENCE_COLLECTION = "presence";
 
 var app = express();
 app.use(express.static(__dirname + "/public"));
@@ -41,7 +41,7 @@ app.post("/presence", function(req, res) {
     handleError(res, "Invalid user input", "Must provide a first or last name.", 400);
   }
 
-  db.collection(CONTACTS_COLLECTION).insertOne(newPresenceEntry, function(err, doc) {
+  db.collection(PRESENCE_COLLECTION).insertOne(newPresenceEntry, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to create new contact.");
     } else {
