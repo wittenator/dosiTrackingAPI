@@ -43,7 +43,7 @@ app.post("/presence", function(req, res) {
   
   if(db.collection.find({personID: newPresenceEntry.personID}) != NULL)
   {
-    db.collection(PRESENCE_COLLECTION).update({id:newPresenceEntry.personID}, {$push:{presence:{date: new Date().format("d-m-Y"), time: new Date().format("h:i:s")}}});
+    db.collection(PRESENCE_COLLECTION).update({personID:newPresenceEntry.personID}, {$push:{presence:{date: new Date().format("d-m-Y"), time: new Date().format("h:i:s")}}});
   } 
   else
   {
