@@ -35,13 +35,16 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
 
 app.post("/presence", function(req, res) {
   var newPresenceEntry = req.body;
-  newPresenceEntry.createDate = new Date();
-  //newPresenceEntry.presence = [];
 
   if (!(req.body.firstName || req.body.lastName)) {
     handleError(res, "Invalid user input", "Must provide a first or last name.", 400);
   }
   
+  if(db.collection.find({personID: newPresenceEntry.personID}) == NULL)
+  {
+    newPresenceEntry.createDate = new Date();
+    newPresenceEntry.presence = {};
+
     db.collection(PRESENCE_COLLECTION).insertOne(newPresenceEntry, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to create new contact.");
@@ -49,7 +52,11 @@ app.post("/presence", function(req, res) {
       res.status(201).json(doc.ops[0]);
     }
     });
-    //db.collection(PRESENCE_COLLECTION).update({personID:newPresenceEntry.personID}, {$push:{presence:{date: new Date().format("d-m-Y"), time: new Date().format("h:i:s")}}});
+  } 
+  else
+  {
+    db.collection(PRESENCE_COLLECTION).update({personID:newPresenceEntry.personID}, {$push:{presence:{date: new Date().format("d-m-Y"), time: new Date().format("h:i:s")}}});
+  }
 
   
 });
