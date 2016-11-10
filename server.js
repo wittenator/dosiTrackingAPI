@@ -36,7 +36,7 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
 app.post("/presence", function(req, res) {
   var newPresenceEntry = req.body;
   newPresenceEntry.createDate = new Date();
-  newPresenceEntry.presence = {};
+  newPresenceEntry.presence = [];
 
   if (!(req.body.firstName || req.body.lastName)) {
     handleError(res, "Invalid user input", "Must provide a first or last name.", 400);
