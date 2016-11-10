@@ -40,7 +40,7 @@ app.post("/presence", function(req, res) {
     handleError(res, "Invalid user input", "Must provide a first or last name.", 400);
   }
   
-  if(db.collection.find({personID: newPresenceEntry.personID}) == NULL)
+  if(/*db.collection.find({personID: newPresenceEntry.personID}) == NULL*/)
   {
     newPresenceEntry.createDate = new Date();
     newPresenceEntry.presence = {};
