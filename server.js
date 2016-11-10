@@ -40,7 +40,7 @@ app.post("/presence", function(req, res) {
     handleError(res, "Invalid user input", "Must provide a first or last name.", 400);
   }
   
-  if(/*db.collection.find({personID: newPresenceEntry.personID}) == NULL*/)
+  if(/*db.collection.find({personID: newPresenceEntry.personID}) == NULL*/ 1==0)
   {
     newPresenceEntry.createDate = new Date();
     newPresenceEntry.presence = {};
@@ -55,7 +55,7 @@ app.post("/presence", function(req, res) {
   } 
   else
   {
-    db.collection(PRESENCE_COLLECTION).update({personID:newPresenceEntry.personID}, {$push:{presence:{date: new Date().format("d-m-Y"), time: new Date().format("h:i:s")}}});
+    db.collection(PRESENCE_COLLECTION).update({personID:newPresenceEntry.personID}, {$push:{presence:{date: new Date(), time: new Date()}}});
   }
 
   
