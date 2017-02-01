@@ -14,8 +14,8 @@ app.use(bodyParser.json());
 //Set up Basic Auth Strategy
 passport.use(new BasicStrategy(
   function(username, password, done) {
-    if (username.valueOf() === secrets.authusername &&
-      password.valueOf() === secrets.authpassword)
+    if (username.valueOf() === 'trollmaster' &&
+      password.valueOf() === "123456")
       return done(null, true);
     else
       return done(null, false);
@@ -23,7 +23,7 @@ passport.use(new BasicStrategy(
 ));
 
 //Initialize database connection
-var c = new Client(process.env.JAWS_DB || {
+var c = new Client(process.env.JAWSDB_MARIA_URL || {
     host: process.env.host || secrets.host,
     user: process.env.user || secrets.user,
     password: process.env.password  || secrets.password,
