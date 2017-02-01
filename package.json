@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "webpack -d --watch",
-    "build": "webpack -p"
+    "build": "webpack -p",
+    "start": "node server/server.js"
   },
   "dependencies": {
     "babel-loader": "^6.2.10",
