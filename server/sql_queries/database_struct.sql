@@ -1,6 +1,6 @@
 /* sets up the basic database design*/
 CREATE TABLE people (rfid INT NOT NULL, name VARCHAR(55) NOT NULL, lastname VARCHAR(55) NOT NULL, ressort VARCHAR(55) NOT NULL, lastChanged DATETIME, PRIMARY KEY(rfid));
-CREATE TABLE attendence(rfid INT NOT NULL, sessionid INT, deviceid VARCHAR(17) NOT NULL, time DATETIME NOT NULL, FOREIGN KEY(rfid) REFERENCES people(rfid));
+CREATE TABLE attendance(rfid INT NOT NULL, sessionid INT, deviceid VARCHAR(17) NOT NULL, time DATETIME NOT NULL, FOREIGN KEY(rfid) REFERENCES people(rfid));
 CREATE TABLE sessions (sessionid INT NOT NULL AUTO_INCREMENT, name VARCHAR(55) NOT NULL, type VARCHAR(55) NOT NULL, starttime DATETIME NOT NULL, endtime DATETIME NOT NULL ,PRIMARY KEY(sessionid));
 CREATE TABLE devices (deviceid VARCHAR(17), UNIQUE KEY(deviceid));
 CREATE TABLE peopleCount (quantity INT NOT NULL, time DATE NOT NULL, UNIQUE KEY(time));
@@ -33,7 +33,7 @@ VALUES
   ('PR Schulung', 'Schulung', '2016-12-15 10:40:00', '2016-12-15 14:50:00'),
   ('DoSi am 19.12', 'DoSi', '2016-12-19 18:30:00', '2016-12-19 22:30:00');
   
-INSERT INTO attendence (rfid, sessionid, deviceid, time)
+INSERT INTO attendance (rfid, sessionid, deviceid, time)
 VALUES 
   (1, 1, 'AF:CC:90:AA:32:43', '2016-12-12 18:40:00'),
   (2, 1, 'AF:CC:90:AA:32:43', '2016-12-12 18:20:15'),
