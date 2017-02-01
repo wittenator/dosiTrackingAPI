@@ -1,24 +1,25 @@
 /* Joins all relevant tables and returns people's names and their corresponding attendend sessions. */
-exports.getAttendence = `
-SELECT people.lastname, GROUP_CONCAT(sessions.name separator ', ') list
+exports.getAttendance = `
+SELECT sessions.sessionid, sessions.name, CONCAT("[", GROUP_CONCAT( people.lastname separator ','), "]") list
   FROM people
-    INNER JOIN attendence
-      ON people.rfid = attendence.rfid
+    INNER JOIN attendance
+      ON people.rfid = attendance.rfid
     INNER JOIN sessions
-      ON attendence.eventid = sessions.eventid
-GROUP BY people.lastname;`;
+      ON attendance.sessionid = sessions.sessionid
+WHERE people.lastChanged >= attendance.time
+GROUP BY sessions.name;`;
 
-/* If there is a session entry, which corresponds to your attendence entry timewise, it is linked automatically. Otherwise the entry is created without an session ID hoping that an event is created later. */
-exports.insertAttendence = `
-IF EXISTS (SELECT 1 FROM sessions where :time BETWEEN (starttime - 3 HOUR) AND (endtime + 3 HOUR))
+/* If there is a session entry, which corresponds to your attendance entry timewise, it is linked automatically. Otherwise the entry is created without an session ID hoping that an event is created later. */
+exports.insertAttendance = `
+IF EXISTS (SELECT 1 FROM sessions WHERE :time  >= DATE_SUB(starttime, INTERVAL 3 HOUR) AND :time <= DATE_ADD(endtime, INTERVAL 3 HOUR))
 THEN
-  INSERT INTO attendence (rfid, sessionid, time, deviceID)
+  INSERT INTO attendance (rfid, sessionid, time, deviceid)
   VALUES
-    (:name, (SELECT sessionid from sessions WHERE :time BETWEEN (starttime - 3 HOUR) AND (endtime + 3 HOUR) LIMIT 1), :time, :deviceID)
+    (:rfid, (SELECT sessionid from sessions WHERE :time  >= DATE_SUB(starttime, INTERVAL 3 HOUR) AND :time <= DATE_ADD(endtime, INTERVAL 3 HOUR) LIMIT 1), :time, :deviceid);
 ELSE
-  INSERT INTO attendence (rfid, time, deviceID)
+  INSERT INTO attendance (rfid, time, deviceid)
   VALUES
-    (:name, :time, :deviceID)
+    (:rfid, :time, :deviceid);
 END IF;`;
 
 /* Plainly returns all users. */
@@ -28,32 +29,31 @@ SELECT name, lastname, ressort, rfid
 
 /*  */
 exports.insertUser = `
-INSERT INTO people (name, lastname, ressort, rfid)
+INSERT INTO people (name, lastname, ressort, rfid, lastChanged)
 VALUES
-    (:name, :lastname, :ressort, :rfid)
+    (:name, :lastname, :ressort, :rfid, CURTIME())
     ON DUPLICATE KEY UPDATE name = VALUES(name),
                             lastname = VALUES(lastname),
-                            ressort = VALUES(ressort);`;
+                            ressort = VALUES(ressort),
+                            lastChanged = VALUES(lastChanged);`;
 
 exports.getSessions = `
 SELECT name, type, starttime, endtime
     FROM sessions;`;
 
 exports.insertSession = `
-IF NOT EXISTS(SELECT 1 FROM sessions WHERE (starttime BETWEEN :starttime AND endtime) OR (endtime BETWEEN :startime AND :endtime) OR (starttime <= :starttime AND endtime >= :endtime))
+IF NOT EXISTS(SELECT 1 FROM sessions WHERE (starttime BETWEEN :starttime AND :endtime) OR (endtime BETWEEN :startime AND :endtime) OR (starttime <= :starttime AND endtime >= :endtime))
 THEN
   INSERT INTO sessions (name, type, starttime, endtime)
   VALUES
-    (:name, :type, :starttime, :endtime)  
+    (:name, :type, :starttime, :endtime);
+  UPDATE attendance
+  SET sessionid = (SELECT sessionid from sessions WHERE starttime = :starttime AND endtime = :endtime LIMIT 1)
+  WHERE time  >= DATE_SUB(:starttime, INTERVAL 3 HOUR) AND time <= DATE_ADD(:endtime, INTERVAL 3 HOUR);
 END IF;`
 ;
 
-exports.updateAttendence = `
-UPDATE attendence
-SET sessionid = (SELECT sessionid from sessions WHERE starttime = :starttime AND endtime = :endtime LIMIT 1)
-WHERE time BETWEEN :starttime - 3 HOUR AND :endtime + 3 HOUR;`;
-
 exports.insertMACAddress = `
-INSERT INTO devices (MACAddress)
+INSERT INTO devices (deviceid)
 VALUES
-    (:deviceID);`;
+    (:deviceid);`;
