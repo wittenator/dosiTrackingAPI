@@ -23,7 +23,7 @@ passport.use(new BasicStrategy(
 ));
 
 //Initialize database connection
-var c = new Client(process.env.JAWSDB_MARIA_URL || {
+var c = new Client({
     host: process.env.host || secrets.host,
     user: process.env.user || secrets.user,
     password: process.env.password  || secrets.password,
@@ -37,7 +37,7 @@ var server = app.listen(process.env.PORT || 8080, function () {
 });
 
 // GET Presence entries of every person
-app.get("/attendence", passport.authenticate('basic', { session: false }), function(req, res) {
+app.get("/attendance", passport.authenticate('basic', { session: false }), function(req, res) {
     c.query(sql_queries.getAttendance, function(err, rows) {
         if (err)
             throw err;
@@ -46,7 +46,7 @@ app.get("/attendence", passport.authenticate('basic', { session: false }), funct
 });
 
 //POST new attendence entry
-app.post("/attendence", passport.authenticate('basic', { session: false }), function(req, res) {
+app.post("/attendance", passport.authenticate('basic', { session: false }), function(req, res) {
     c.query(sql_queries.insertAttendance, {rfid:req.body.rfid, deviceid:req.body.deviceid, time:req.body.time}, function(err, rows) {
         if (err)
             throw err;
