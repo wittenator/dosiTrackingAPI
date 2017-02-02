@@ -20,6 +20,21 @@ VALUES
   ((SELECT COUNT(*) FROM people), CURDATE())
   ON DUPLICATE KEY UPDATE quantity = VALUES(quantity);
 
+/*create stored procedure*/
+CREATE PROCEDURE insertAttendance(OUT:time DATETIME, OUT :rfid BIGINT, OUT :deviceID VARCHAR(17))
+BEGIN
+  IF EXISTS (SELECT 1 FROM sessions WHERE :time  >= DATE_SUB(starttime, INTERVAL 3 HOUR) AND :time <= DATE_ADD(endtime, INTERVAL 3 HOUR))
+  THEN
+    INSERT INTO attendance (rfid, sessionid, time, deviceid)
+      VALUES
+      (:rfid, (SELECT sessionid from sessions WHERE :time  >= DATE_SUB(starttime, INTERVAL 3 HOUR) AND :time <= DATE_ADD(endtime, INTERVAL 3 HOUR) LIMIT 1), :time, :deviceid);
+  ELSE
+    INSERT INTO attendance (rfid, time, deviceid)
+    VALUES
+      (:rfid, :time, :deviceid);
+END IF;
+END;
+
 /* inserts test values*/
 INSERT INTO people (rfid, name, lastname, ressort)
 VALUES 
