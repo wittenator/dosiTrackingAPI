@@ -6,7 +6,6 @@ SELECT sessions.sessionid, sessions.name, CONCAT("[", GROUP_CONCAT( people.lastn
       ON people.rfid = attendance.rfid
     INNER JOIN sessions
       ON attendance.sessionid = sessions.sessionid
-WHERE people.lastChanged >= attendance.time
 GROUP BY sessions.name;`;
 
 /* If there is a session entry, which corresponds to your attendance entry timewise, it is linked automatically. Otherwise the entry is created without an session ID hoping that an event is created later. */
