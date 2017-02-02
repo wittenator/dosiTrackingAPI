@@ -56,7 +56,7 @@ app.post("/attendance", passport.authenticate('basic', { session: false }), func
 });
 
 //GET all user entries
-app.get("/user",  function(req, res) {
+app.get("/user", passport.authenticate('basic', { session: false }), function(req, res) {
     c.query(sql_queries.getUsers, function(err, rows) {
         if (err)
             throw err;
@@ -64,7 +64,7 @@ app.get("/user",  function(req, res) {
     });    
 });
 
-app.post("/user", passport.authenticate('basic', { session: false }), function(req, res) {
+app.post("/user",  function(req, res) {
     c.query(sql_queries.insertUser, {name:req.body.name, lastname:req.body.lastname, ressort:req.body.ressort, rfid:req.body.rfid}, function(err, rows) {
         if (err)
             throw err;
