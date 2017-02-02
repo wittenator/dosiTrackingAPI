@@ -8,9 +8,24 @@ SELECT sessions.sessionid, sessions.name, CONCAT("[", GROUP_CONCAT( people.lastn
       ON attendance.sessionid = sessions.sessionid
 GROUP BY sessions.name;`;
 
-/* If there is a session entry, which corresponds to your attendance entry timewise, it is linked automatically. Otherwise the entry is created without an session ID hoping that an event is created later. */
 exports.insertAttendance = `
-CALL insertAttendance(:time, :rfid, :deviceid);`;
+  INSERT INTO attendance (rfid, sessionid, time, deviceid)
+  VALUES
+    (:rfid, (SELECT sessionid from sessions WHERE :time  >= DATE_SUB(starttime, INTERVAL 3 HOUR) AND :time <= DATE_ADD(endtime, INTERVAL 3 HOUR) LIMIT 1), :time, :deviceid);
+`;
+
+/* If there is a session entry, which corresponds to your attendance entry timewise, it is linked automatically. Otherwise the entry is created without an session ID hoping that an event is created later. */
+exports.insertAttendances = `
+IF EXISTS (SELECT 1 FROM sessions WHERE :time  >= DATE_SUB(starttime, INTERVAL 3 HOUR) AND :time <= DATE_ADD(endtime, INTERVAL 3 HOUR))
+THEN
+  INSERT INTO attendance (rfid, sessionid, time, deviceid)
+  VALUES
+    (:rfid, (SELECT sessionid from sessions WHERE :time  >= DATE_SUB(starttime, INTERVAL 3 HOUR) AND :time <= DATE_ADD(endtime, INTERVAL 3 HOUR) LIMIT 1), :time, :deviceid);
+ELSE
+  INSERT INTO attendance (rfid, time, deviceid)
+  VALUES
+    (:rfid, :time, :deviceid);
+END IF;`;
 
 /* Plainly returns all users. */
 exports.getUsers = `
