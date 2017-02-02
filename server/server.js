@@ -56,7 +56,7 @@ app.post("/attendance", passport.authenticate('basic', { session: false }), func
 });
 
 //GET all user entries
-app.get("/user", passport.authenticate('basic', { session: false }), function(req, res) {
+app.get("/user",  function(req, res) {
     c.query(sql_queries.getUsers, function(err, rows) {
         if (err)
             throw err;
