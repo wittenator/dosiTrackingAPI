@@ -46,7 +46,7 @@ app.get("/attendance", passport.authenticate('basic', { session: false }), funct
 });
 
 //POST new attendence entry
-app.post("/attendance", passport.authenticate('basic', { session: false }), function(req, res) {
+app.post("/postattendance", passport.authenticate('basic', { session: false }), function(req, res) {
     c.query(sql_queries.insertAttendance, {rfid:req.body.rfid, deviceid:req.body.deviceid, time:req.body.time}, function(err, rows) {
         if (err)
             throw err;
