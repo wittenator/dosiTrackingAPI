@@ -64,7 +64,7 @@ app.get("/user", passport.authenticate('basic', { session: false }), function(re
     });    
 });
 
-app.post("/user",  function(req, res) {
+app.post("/user", passport.authenticate('basic', { session: false }), function(req, res) {
     c.query(sql_queries.insertUser, {name:req.body.name, lastname:req.body.lastname, ressort:req.body.ressort, rfid:req.body.rfid}, function(err, rows) {
         if (err)
             throw err;
