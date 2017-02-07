@@ -4,7 +4,7 @@ var bodyParser = require("body-parser");
 var Client = require('mariasql');
 var passport = require('passport')    
 var BasicStrategy = require('passport-http').BasicStrategy;
-var secrets = require("./secrets.json");
+//var secrets = require("./secrets.json");
 var sql_queries = require("./sql_queries/sql_queries.js");
 
 var app = express();
