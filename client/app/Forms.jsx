@@ -9,11 +9,11 @@ import axios from 'axios';
     };
 
     var axiosinstance = axios.create({
-    headers:{'Access-Control-Allow-Origin':'*'},
-    auth:{
-    username:"trollmaster",
-    password:"123456"},
-    withCredentials: true
+        headers:{'Access-Control-Allow-Origin':'*', 'Content-Type':'text/plain'},
+        auth:{
+            username:"trollmaster",
+            password:"123456"},
+        withCredentials: true
     });
 
 export default class DividerExampleForm extends React.Component{
@@ -29,10 +29,10 @@ export default class DividerExampleForm extends React.Component{
       this.setState({value: event.target.value});
     }
 
+
     handleSubmit(event) {
-      alert('A name was submitted: ' + this.state.value);
       event.preventDefault();
-      axios.get('http://dositrackingapi.herokuapp.com/user')
+      axiosinstance.get('http://dositrackingapi.herokuapp.com/attendance')
         .then(function (response) {
         console.log(response);
         })

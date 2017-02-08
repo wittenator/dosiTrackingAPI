@@ -68606,7 +68606,7 @@
 	};
 	
 	var axiosinstance = _axios2.default.create({
-	  headers: { 'Access-Control-Allow-Origin': '*' },
+	  headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'text/plain' },
 	  auth: {
 	    username: "trollmaster",
 	    password: "123456" },
@@ -68635,9 +68635,8 @@
 	  }, {
 	    key: 'handleSubmit',
 	    value: function handleSubmit(event) {
-	      alert('A name was submitted: ' + this.state.value);
 	      event.preventDefault();
-	      _axios2.default.get('http://dositrackingapi.herokuapp.com/user').then(function (response) {
+	      axiosinstance.get('http://dositrackingapi.herokuapp.com/attendance').then(function (response) {
 	        console.log(response);
 	      }).catch(function (error) {
 	        console.log(error);
