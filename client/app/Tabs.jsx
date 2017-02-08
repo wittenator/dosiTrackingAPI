@@ -3,6 +3,7 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import FontIcon from 'material-ui/FontIcon';
 import MapsPersonPin from 'material-ui/svg-icons/maps/person-pin';
 import BasicTable from './Table.jsx'
+import DividerExampleForm from './Forms.jsx'
 
 const TabsExample = () => (
   <Tabs>
@@ -20,9 +21,7 @@ const TabsExample = () => (
       icon={<MapsPersonPin />}
       label="DASHBOARD">
         <div>
-            <h2>
-            Also hello from me!
-            </h2>
+            <DividerExampleForm />
         </div>
     </Tab>
   </Tabs>

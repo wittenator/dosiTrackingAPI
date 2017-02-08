@@ -9,7 +9,9 @@ injectTapEventPlugin();
 
 const App = () => (
   <MuiThemeProvider>
-    <TabsExample />
+    <div>
+        <TabsExample />
+    </div>
   </MuiThemeProvider>
 );
  

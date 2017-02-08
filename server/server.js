@@ -11,6 +11,14 @@ var app = express();
 app.use(passport.initialize());
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
+
+//Enable CORS requests
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 //Set up Basic Auth Strategy
 passport.use(new BasicStrategy(
   function(username, password, done) {
